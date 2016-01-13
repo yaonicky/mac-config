@@ -10,3 +10,7 @@
 /logs/*.log
 /www/*
 !/www/lib
+
+
+### Other ignore ###
+.idea/
