@@ -1,0 +1,178 @@
+#!/bin/bash
+#source ~/config.bash
+
+#config project
+DEFAULT_USER=Nicky
+DEFAULT_DOMAIN_WEB=/Users/Nicky/Web
+DOMAIN_SELF="l.dev"
+DOMAINS_ALIAS="%PROJECT%.l.wizmacau.com %PROJECT%.nicky.local"
+
+#config path
+PATH_DOMAIN_WWW=$DEFAULT_DOMAIN_WEB/www
+PATH_LOGS=$DEFAULT_DOMAIN_WEB/logs
+PATH_VHOST=$DEFAULT_DOMAIN_WEB/Conf/nginx
+PATH_CERT=$DEFAULT_DOMAIN_WEB/Conf/cert
+
+until [ "$project" != "" ]
+do
+	read -p "Please Input Project Name:" project
+done
+
+read -p "Please Input Domain [Default Domain: $DOMAIN_SELF]:" domain
+if [[ "$domain" == "" ]]; then
+	domain="$DOMAIN_SELF"
+fi
+
+full_domain="$project.$domain"
+vhost_file="$PATH_VHOST/site-enable/$full_domain-vhost.conf"
+### 检查项目虚拟配置文件
+if [[ ! -f "$vhost_file" ]]; then
+	echo "Project Website = $full_domain"
+	echo "========================================================="
+else
+	echo "$full_domain is exist!"
+	echo "========================================================="
+	exit 1
+fi
+### 虚拟主机配置目录不存在，则创建目录
+echo "Create Virtual Host Directory..."
+if [[ ! -d "$PATH_VHOST/site-enable" ]]; then
+	mkdir -p $PATH_VHOST/site-enable
+fi
+
+read -p "Please Enter Other Alias:" domain_alias
+if [ $domain_alias ]; then
+	domain_alias="$domain_alias"
+else
+	if [[ ! -z $DOMAINS_ALIAS ]]; then
+		domain_alias=`echo $DOMAINS_ALIAS | sed -e "s/%PROJECT%/$project/g"`
+	else
+		domain_alias=$full_domain
+	fi
+fi
+echo "Other Alias = $domain_alias"
+echo "========================================================="
+
+default_root="$PATH_DOMAIN_WWW/$full_domain/$project"
+index_file="index.php"
+until [ "$is_sf" == "n" -o "$is_sf" == "y" ]
+do
+	read -p "Is Symfony Project? [default: y]: " is_sf
+	is_sf=${is_sf:=y}
+done
+if [ "$is_sf" == "y" ]; then
+	doc_root="web"
+
+	read -p "Symfony Project Version No. ? [default: 2]:" sf_version
+	sf_version=${sf_version:=2}
+	if [ "$sf_version" == "1" ]; then
+		index_file="frontend_dev.php";
+	else
+		index_file="app_dev.php";
+	fi
+else
+	read -p "Please Input Document Web Root Folder: [Document Root:$default_root] " doc_root
+	read -p "Please Input Project Index File ? [default: index.php]:" index_file
+fi
+
+### 確定項目Web目錄
+if [ "$doc_root" = "" ]; then
+    vhost_dir=$default_root
+else
+	vhost_dir="$default_root/$doc_root"
+fi
+### 項目根目錄如果不存在則創建
+if [[ ! -d "$default_root" ]]; then
+	mkdir -p $default_root
+fi
+echo "Set Permission Of Document Root Directory..."
+chown -R $DEFAULT_USER:staff $PATH_DOMAIN_WWW/$full_domain
+
+### 是否需要ssl(https)
+until [ "$ssl" == "n" -o "$ssl" == "y" ]
+do
+	read -p "Need SSL [Default: n]: " ssl
+	ssl=${ssl:=n}
+done
+
+### 是否需要git
+until [ "$is_git" == "n" -o "$is_git" == "y" ]
+do
+	read -p "Clone From Git? [Default: y]: " is_git
+	is_git=${is_git:=y}
+done
+if [ "$is_git" == "y" ]; then
+	read -p "Please Input Project Git URL ? [default: git@tiger.wizmacau.com:$project]:" git_repo
+	git_repo=${git_repo:=git@tiger.wizmacau.com:$project}
+	cd $default_root
+	pwd
+	git clone $git_repo .
+fi
+
+###### Start Write Vhost Confg To Vhost File #####
+#Vhost config
+echo "server {" > $vhost_file
+echo "    set \$project_name  $project;" >> $vhost_file
+echo "    set \$fcgi_pass     127.0.0.1:9054;" >> $vhost_file
+echo "    set \$root_path     $vhost_dir;" >> $vhost_file
+echo "    set \$index_file    $index_file;" >> $vhost_file
+echo "" >> $vhost_file
+echo "    listen             80;" >> $vhost_file
+echo "    server_name        $full_domain $domain_alias;" >> $vhost_file
+echo "    root               \$root_path;" >> $vhost_file
+echo "" >> $vhost_file
+echo "    error_log          $PATH_LOGS/$full_domain.error_nginx.log;" >> $vhost_file
+echo "    access_log         $PATH_LOGS/$full_domain.access_nginx.log;" >> $vhost_file
+echo "" >> $vhost_file
+echo "    include $PATH_VHOST/global/php.conf;" >> $vhost_file
+echo "    include $PATH_VHOST/global/common.conf;" >> $vhost_file
+if [ "$is_sf" == "y" ] && [ "$sf_version" == "1" ]; then
+echo "    include $PATH_VHOST/global/symfony.conf;" >> $vhost_file
+fi
+echo "}" >> $vhost_file
+echo "" >> $vhost_file
+
+### Start SSL Vhost
+if [ "$ssl" == "y" ]; then
+
+echo "server {" >> $vhost_file
+echo "    set \$project_name  $project;" >> $vhost_file
+echo "    set \$fcgi_pass     127.0.0.1:9054;" >> $vhost_file
+echo "    set \$root_path     $vhost_dir;" >> $vhost_file
+echo "    set \$index_file    $index_file;" >> $vhost_file
+echo "" >> $vhost_file
+echo "    listen             443;" >> $vhost_file
+echo "    server_name        $full_domain $domain_alias;" >> $vhost_file
+echo "    root               \$root_path;" >> $vhost_file
+echo "" >> $vhost_file
+echo "    error_log          $PATH_LOGS/$full_domain.ssl_error_nginx.log;" >> $vhost_file
+echo "    access_log         $PATH_LOGS/$full_domain.ssl_access_nginx.log;" >> $vhost_file
+echo "" >> $vhost_file
+echo "    ssl on;" >> $vhost_file
+echo "    ssl_certificate $PATH_CERT/server.crt;" >> $vhost_file
+echo "    ssl_certificate_key $PATH_CERT/server.key;" >> $vhost_file
+echo "" >> $vhost_file
+echo "    include $PATH_VHOST/global/php.conf;" >> $vhost_file
+echo "    include $PATH_VHOST/global/common.conf;" >> $vhost_file
+if [ "$is_sf" == "y" ] && [ "$sf_version" == "1" ]; then
+echo "    include $PATH_VHOST/global/symfony.conf;" >> $vhost_file
+fi
+echo "}" >> $vhost_file
+echo "" >> $vhost_file
+
+fi
+echo "Success Create Vhost $vhost_file"
+###### End Write Vhost Confg To Vhost File #####
+
+
+until [ "$restart_nginx" == "n" -o "$restart_nginx" == "y" ]
+do
+	read -p "Restart Nginx [default: y]: " restart_nginx
+	restart_nginx=${restart_nginx:=y}
+done
+if [ "$restart_nginx" == "y" ]; then
+	nginx -t
+	lunchy restart nginx
+else
+	nginx -t
+fi

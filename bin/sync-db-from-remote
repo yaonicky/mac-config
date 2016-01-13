@@ -1,0 +1,51 @@
+#!/bin/bash
+
+until [ "$remote_ssh" != "" ]
+do
+  read -p "remote ssh host [default: webadmin@tiger.wizmacau.com]: " remote_ssh
+  remote_ssh=${remote_ssh:=webadmin@tiger.wizmacau.com}
+done
+
+until [ "$remote_db" != "" ]
+do
+  read -p "remote DB: " remote_db
+done
+
+until [ "$remote_db_user" != "" ]
+do
+  read -p "remote DB user [default: wiztest_sf]: " remote_db_user
+  remote_db_user=${remote_db_user:=wiztest_sf}
+done
+
+until [ "$remote_db_pw" != "" ]
+do
+  read -p "remote DB PW [default: zx123456]: " remote_db_pw
+  remote_db_pw=${remote_db_pw:=zx123456}
+done
+
+
+until [ "$local_host" != "" ]
+do
+  read -p "local host [default: localhost]: " local_host
+  local_host=${local_host:=localhost}
+done
+
+until [ "$local_db" != "" ]
+do
+  read -p "local DB [$remote_db]: " local_db
+  local_db=${local_db:=$remote_db}
+done
+
+until [ "$local_db_user" != "" ]
+do
+  read -p "local DB user [default: dev]: " local_db_user
+  local_db_user=${local_db_user:=dev}
+done
+
+until [ "$local_db_pw" != "" ]
+do
+  read -p "local DB PW [default: zx123456]: " local_db_pw
+  local_db_pw=${local_db_pw:=zx123456}
+done
+
+ssh $remote_ssh "mysqldump -u $remote_db_user -p$remote_db_pw --opt --quote-names --allow-keywords --complete-insert $remote_db" | mysql --user=$local_db_user --password=$local_db_pw -h $local_host $local_db

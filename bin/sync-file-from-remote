@@ -1,0 +1,57 @@
+#!/bin/bash
+
+### 參數一：項目名稱
+### 參數二：rsync 其它命令參數
+: ${1:?"Please provide project name."}
+project=$1
+rsync_p=$2
+rsync_e=""
+
+### rsync 命令參數
+if [[ "$rsync_p" != "" ]]; then
+  rsync_p="$rsync_p "
+fi
+
+until [ "$remote_ssh" != "" ]
+do
+  read -p "remote ssh host [default: webadmin@tiger.wizmacau.com]: " remote_ssh
+  remote_ssh=${remote_ssh:=webadmin@tiger.wizmacau.com}
+done
+
+until [ "$remote_ssh_port" != "" ]
+do
+  read -p "remote ssh port [default: 22]: " remote_ssh_port
+  remote_ssh_port=${remote_ssh_port:=22}
+  if [ "$remote_ssh_port" != "22" ]; then
+    rsync_e="-e \"ssh -p $remote_ssh_port\" "
+  fi
+done
+
+until [ "$remote_file" != "" ]
+do
+  read -p "remote file [default: web/uploads]: " remote_file
+  remote_file=${remote_file:="web/uploads"}
+  remote_file_target=${remote_file_target:=$remote_file}
+  if [ "$remote_ssh" == "webadmin@tiger.wizmacau.com" ]; then
+    if [ "$remote_file" == "web/uploads" -o "$remote_file" == "vendor" ]; then
+      remote_file="/home/webadmin/domains/$project.tiger.wizmacau.com/public_html/$remote_file"
+    fi
+  fi
+done
+
+until [ "$local_file" != "" ]
+do
+  read -p "local file [default: $remote_file_target]: " local_file
+  local_file=${local_file:=$remote_file_target}
+done
+
+read -p "run commnad now ? [default: n]:" run_command
+if [[ $run_command == "y" ]]; then
+###echo "go"
+echo "rsync -azvh $rsync_e$rsync_p$remote_ssh:$remote_file/ $local_file/"
+rsync -azvh $rsync_e$rsync_p$remote_ssh:$remote_file/ $local_file/
+else
+###echo "test"
+echo "rsync -n -azvh $rsync_e$rsync_p$remote_ssh:$remote_file/ $local_file/";
+rsync -n -azvh $rsync_e$rsync_p$remote_ssh:$remote_file/ $local_file/
+fi

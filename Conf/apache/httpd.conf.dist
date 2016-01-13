@@ -1,0 +1,41 @@
+#加载php5模块 -- httpd.conf
+#php54
+LoadModule php5_module /usr/local/Cellar/php54/5.4.41/libexec/apache2/libphp5.so
+#php56
+#LoadModule php5_module /usr/local/Cellar/php56/5.6.9/libexec/apache2/libphp5.so
+
+########################################################################
+#在PHP5之後，在APACHE的設定檔(httpd.conf)中必須要有這幾行的設定。
+#http://www.php5.idv.tw/html.php?mod=article&do=show&shid=39
+#指名附檔名是 .php .phtml .inc .php3的程式都當成php程式 ，其於的都當成一般網頁
+AddType application/x-httpd-php .php .phtml .inc .php3
+
+############################# symfony 1.4 ##############################
+#引用symfony1.4的内置资源文件，包括CSS,JS等
+Alias /sf /Users/Nicky/Web/lib/symfony14/data/web/sf
+<Directory /Users/Nicky/Web/lib/symfony14/data/web/sf>
+    AllowOverride All
+    Require all granted
+</Directory>
+
+############################# Localhost Server ##########################
+ServerName 127.0.0.1
+#设置localhost访问权限到www目录
+DocumentRoot "/Users/Nicky/Web/www"
+<Directory /Users/Nicky/Web/www>
+	#Options Indexes MultiViews FollowSymLinks
+    Options Indexes FollowSymLinks Includes ExecCGI
+    AllowOverride All
+    Require all granted
+</Directory>
+
+#Vhost 80端口
+#NameVirtualHost *:80
+#Vhost 端口，开启SSL端口使用https
+#NameVirtualHost *:443
+
+
+
+############################# Virtual Hosts ############################
+#Include /Users/Nicky/Web/Conf/apache/vhost/*-vhost.conf
+############################# Virtual Hosts ############################
