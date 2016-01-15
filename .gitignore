@@ -10,6 +10,7 @@
 
 ### Web Config ###
 /logs/*.log
+!logs/.gitkeep
 /www/*
 !/www/lib
 
