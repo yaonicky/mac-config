@@ -10,6 +10,7 @@ SHARE_SHELL_PATH="$USER_HOME/Web/bash"
 source $SHARE_SHELL_PATH/autocomplete-git.bash
 source $SHARE_SHELL_PATH/autocomplete-symfony1.bash
 source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
+source $SHARE_SHELL_PATH/autocomplete-lunchy.bash
 
 function mcd(){
 	cd $USER_HOME/Web/www/$1.$SELF_DOMAIN/$1

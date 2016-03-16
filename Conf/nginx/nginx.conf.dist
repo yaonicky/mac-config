@@ -45,7 +45,7 @@ http {
     #gzip  on;
 
     server {
-        set $fcgi_pass     127.0.0.1:9054;
+        set $fcgi_pass     127.0.0.1:9070;
 
         listen       80;
         server_name  localhost;
