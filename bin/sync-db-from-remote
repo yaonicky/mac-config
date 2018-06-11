@@ -2,13 +2,19 @@
 
 until [ "$remote_ssh" != "" ]
 do
-  read -p "remote ssh host [default: webadmin@tiger.wizmacau.com]: " remote_ssh
-  remote_ssh=${remote_ssh:=webadmin@tiger.wizmacau.com}
+  read -p "remote ssh host [default: webuser@192.168.23.32]: " remote_ssh
+  remote_ssh=${remote_ssh:=webuser@192.168.23.32}
 done
 
 until [ "$remote_db" != "" ]
 do
   read -p "remote DB: " remote_db
+done
+
+until [ "$remote_db_host" != "" ]
+do
+  read -p "remote DB host [default: mysql55]: " remote_db_host
+  remote_db_host=${remote_db_host:=mysql55}
 done
 
 until [ "$remote_db_user" != "" ]
@@ -19,21 +25,21 @@ done
 
 until [ "$remote_db_pw" != "" ]
 do
-  read -p "remote DB PW [default: zx123456]: " remote_db_pw
-  remote_db_pw=${remote_db_pw:=zx123456}
+  read -p "remote DB PW [default: Zx@sql1234]: " remote_db_pw
+  remote_db_pw=${remote_db_pw:=Zx@sql1234}
 done
 
-
-until [ "$local_host" != "" ]
-do
-  read -p "local host [default: localhost]: " local_host
-  local_host=${local_host:=localhost}
-done
 
 until [ "$local_db" != "" ]
 do
   read -p "local DB [$remote_db]: " local_db
   local_db=${local_db:=$remote_db}
+done
+
+until [ "$local_db_host" != "" ]
+do
+  read -p "local DB host [default: localhost]: " local_db_host
+  local_db_host=${local_db_host:=localhost}
 done
 
 until [ "$local_db_user" != "" ]
@@ -48,4 +54,4 @@ do
   local_db_pw=${local_db_pw:=zx123456}
 done
 
-ssh $remote_ssh "mysqldump -u $remote_db_user -p$remote_db_pw --opt --quote-names --allow-keywords --complete-insert $remote_db" | mysql --user=$local_db_user --password=$local_db_pw -h $local_host $local_db
+ssh $remote_ssh "mysqldump -h $remote_db_host -u $remote_db_user -p$remote_db_pw --opt --quote-names --allow-keywords --complete-insert $remote_db" | mysql --user=$local_db_user --password=$local_db_pw -h $local_db_host $local_db

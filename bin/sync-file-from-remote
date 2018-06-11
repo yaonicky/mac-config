@@ -14,8 +14,8 @@ fi
 
 until [ "$remote_ssh" != "" ]
 do
-  read -p "remote ssh host [default: webadmin@tiger.wizmacau.com]: " remote_ssh
-  remote_ssh=${remote_ssh:=webadmin@tiger.wizmacau.com}
+  read -p "remote ssh host [default: webuser@192.168.23.32]: " remote_ssh
+  remote_ssh=${remote_ssh:=webuser@192.168.23.32}
 done
 
 until [ "$remote_ssh_port" != "" ]
@@ -32,9 +32,9 @@ do
   read -p "remote file [default: web/uploads]: " remote_file
   remote_file=${remote_file:="web/uploads"}
   remote_file_target=${remote_file_target:=$remote_file}
-  if [ "$remote_ssh" == "webadmin@tiger.wizmacau.com" ]; then
+  if [ "$remote_ssh" == "webuser@192.168.23.32" ]; then
     if [ "$remote_file" == "web/uploads" -o "$remote_file" == "vendor" ]; then
-      remote_file="/home/webadmin/domains/$project.tiger.wizmacau.com/public_html/$remote_file"
+      remote_file="/data/www/$project/public_html/$remote_file"
     fi
   fi
 done
