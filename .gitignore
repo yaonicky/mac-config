@@ -1,18 +1,18 @@
 ### Apache Config ###
-/Conf/apache/vhost/*vhost.conf
+Conf/apache/vhost/*vhost.conf
 !Conf/apache/vhost/.gitkeep
-/Conf/apache/httpd.conf
+Conf/apache/httpd.conf
 
 ### Nginx Config ###
-/Conf/nginx/site-enable/*vhost.conf
+Conf/nginx/site-enable/*vhost.conf
 !Conf/nginx/site-enable/.gitkeep
-/Conf/nginx/nginx.conf
+Conf/nginx/nginx.conf
 
 ### Web Config ###
-/logs/*.log
+logs/*.log
 !logs/.gitkeep
-/www/*
-!/www/lib
+www/*
+!www/lib
 
 
 ### Other ignore ###

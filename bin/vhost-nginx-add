@@ -4,7 +4,7 @@
 #config project
 DEFAULT_USER=Nicky
 DEFAULT_DOMAIN_WEB=/Users/Nicky/Web
-DOMAIN_SELF="l.dev"
+DOMAIN_SELF="dev"
 DOMAINS_ALIAS="%PROJECT%.l.wizmacau.com %PROJECT%.nicky.local"
 
 #config path

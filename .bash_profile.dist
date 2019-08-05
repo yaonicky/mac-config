@@ -1,5 +1,5 @@
 USER_HOME="/Users/Nicky"
-SELF_DOMAIN="l.dev"
+DOMAIN_SELF="dev"
 source $USER_HOME/Web/bash/init-function.bash
 
 ### Setting for the new UTF-8 terminal support in Lion
