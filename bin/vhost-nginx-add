@@ -2,23 +2,23 @@
 #source ~/config.bash
 
 #config project
-DEFAULT_USER=Nicky
-DEFAULT_DOMAIN_WEB=/Users/Nicky/Web
+DEFAULT_USER=nicky
+DEFAULT_DOMAIN_WEB=/Users/nicky/Web
 DOMAIN_SELF="dev"
 DOMAINS_ALIAS="%PROJECT%.l.wizmacau.com %PROJECT%.nicky.local"
 
 #config path
 PATH_DOMAIN_WWW=$DEFAULT_DOMAIN_WEB/www
 PATH_LOGS=$DEFAULT_DOMAIN_WEB/logs
-PATH_VHOST=$DEFAULT_DOMAIN_WEB/Conf/nginx
-PATH_CERT=$DEFAULT_DOMAIN_WEB/Conf/cert
+PATH_VHOST=$DEFAULT_DOMAIN_WEB/config/server/nginx
+PATH_CERT=$DEFAULT_DOMAIN_WEB/config/server/cert
 
 until [ "$project" != "" ]
 do
-	read -p "Please Input Project Name:" project
+	read -p "请输入项目名称:" project
 done
 
-read -p "Please Input Domain [Default Domain: $DOMAIN_SELF]:" domain
+read -p "请输入子目录 [默认子目录: $DOMAIN_SELF]:" domain
 if [[ "$domain" == "" ]]; then
 	domain="$DOMAIN_SELF"
 fi
@@ -27,20 +27,20 @@ full_domain="$project.$domain"
 vhost_file="$PATH_VHOST/site-enable/$full_domain-vhost.conf"
 ### 检查项目虚拟配置文件
 if [[ ! -f "$vhost_file" ]]; then
-	echo "Project Website = $full_domain"
+	echo "项目站点 = $full_domain"
 	echo "========================================================="
 else
-	echo "$full_domain is exist!"
+	echo "$full_domain 已存在!"
 	echo "========================================================="
 	exit 1
 fi
 ### 虚拟主机配置目录不存在，则创建目录
-echo "Create Virtual Host Directory..."
+echo "创建虚拟主机配置目录..."
 if [[ ! -d "$PATH_VHOST/site-enable" ]]; then
 	mkdir -p $PATH_VHOST/site-enable
 fi
 
-read -p "Please Enter Other Alias:" domain_alias
+read -p "请输域名访问地址 [默认域名: $DOMAINS_ALIAS]:" domain_alias
 if [ $domain_alias ]; then
 	domain_alias="$domain_alias"
 else
@@ -50,29 +50,31 @@ else
 		domain_alias=$full_domain
 	fi
 fi
-echo "Other Alias = $domain_alias"
+echo "访问域名地址 = $domain_alias"
 echo "========================================================="
 
-default_root="$PATH_DOMAIN_WWW/$full_domain/$project"
+default_root="$PATH_DOMAIN_WWW/$full_domain/current"
 index_file="index.php"
 until [ "$is_sf" == "n" -o "$is_sf" == "y" ]
 do
-	read -p "Is Symfony Project? [default: y]: " is_sf
+	read -p "是否为Symfony项目? [默认: y]: " is_sf
 	is_sf=${is_sf:=y}
 done
 if [ "$is_sf" == "y" ]; then
 	doc_root="web"
 
-	read -p "Symfony Project Version No. ? [default: 2]:" sf_version
-	sf_version=${sf_version:=2}
+	read -p "symfony版本? [默认: 3]:" sf_version
+	sf_version=${sf_version:=3}
 	if [ "$sf_version" == "1" ]; then
 		index_file="frontend_dev.php";
-	else
+	elif [ "$sf_version" == "2" -o "$sf_version" == "3" ]; then
 		index_file="app_dev.php";
+	else
+		index_file="index.php";
 	fi
 else
-	read -p "Please Input Document Web Root Folder: [Document Root:$default_root] " doc_root
-	read -p "Please Input Project Index File ? [default: index.php]:" index_file
+	read -p "请输入项目公共目录: [默认: $default_root] " doc_root
+	read -p "请输入项目入口文件: [默认: index.php]:" index_file
 fi
 
 ### 確定項目Web目錄
@@ -85,25 +87,25 @@ fi
 if [[ ! -d "$default_root" ]]; then
 	mkdir -p $default_root
 fi
-echo "Set Permission Of Document Root Directory..."
+echo "设定目录用户权限..."
 chown -R $DEFAULT_USER:staff $PATH_DOMAIN_WWW/$full_domain
 
 ### 是否需要ssl(https)
 until [ "$ssl" == "n" -o "$ssl" == "y" ]
 do
-	read -p "Need SSL [Default: n]: " ssl
+	read -p "需要 SSL? [默认: n]: " ssl
 	ssl=${ssl:=n}
 done
 
 ### 是否需要git
 until [ "$is_git" == "n" -o "$is_git" == "y" ]
 do
-	read -p "Clone From Git? [Default: y]: " is_git
+	read -p "从git库拉取项目? [默认: y]: " is_git
 	is_git=${is_git:=y}
 done
 if [ "$is_git" == "y" ]; then
-	read -p "Please Input Project Git URL ? [default: git@tiger.wizmacau.com:$project]:" git_repo
-	git_repo=${git_repo:=git@tiger.wizmacau.com:$project}
+	read -p "请输入git地址? [默认: git@gitlab.wizmacau.com:$project.git]:" git_repo
+	git_repo=${git_repo:=git@gitlab.wizmacau.com:$project.git}
 	cd $default_root
 	pwd
 	git clone $git_repo .
@@ -113,7 +115,7 @@ fi
 #Vhost config
 echo "server {" > $vhost_file
 echo "    set \$project_name  $project;" >> $vhost_file
-echo "    set \$fcgi_pass     127.0.0.1:9054;" >> $vhost_file
+echo "    set \$fcgi_pass     127.0.0.1:9072;" >> $vhost_file
 echo "    set \$root_path     $vhost_dir;" >> $vhost_file
 echo "    set \$index_file    $index_file;" >> $vhost_file
 echo "" >> $vhost_file
@@ -137,7 +139,7 @@ if [ "$ssl" == "y" ]; then
 
 echo "server {" >> $vhost_file
 echo "    set \$project_name  $project;" >> $vhost_file
-echo "    set \$fcgi_pass     127.0.0.1:9054;" >> $vhost_file
+echo "    set \$fcgi_pass     127.0.0.1:9072;" >> $vhost_file
 echo "    set \$root_path     $vhost_dir;" >> $vhost_file
 echo "    set \$index_file    $index_file;" >> $vhost_file
 echo "" >> $vhost_file
@@ -161,13 +163,17 @@ echo "}" >> $vhost_file
 echo "" >> $vhost_file
 
 fi
-echo "Success Create Vhost $vhost_file"
+echo "创建虚拟主机配置文件成功 = $vhost_file"
 ###### End Write Vhost Confg To Vhost File #####
 
+### 日志目錄如果不存在則創建
+if [[ ! -d "$PATH_LOGS" ]]; then
+	mkdir -p $PATH_LOGS
+fi
 
 until [ "$restart_nginx" == "n" -o "$restart_nginx" == "y" ]
 do
-	read -p "Restart Nginx [default: y]: " restart_nginx
+	read -p "重启 Nginx 服务? [默认: y]: " restart_nginx
 	restart_nginx=${restart_nginx:=y}
 done
 if [ "$restart_nginx" == "y" ]; then

@@ -42,20 +42,18 @@ http {
     # 关闭IE6 Gzip压缩
     gzip_disable "MSIE [1-6]\.";
 
-    #gzip  on;
-
     server {
-        set $fcgi_pass     127.0.0.1:9070;
+        set $fcgi_pass     127.0.0.1:9072;
 
         listen       80;
         server_name  localhost;
-        root         /Users/Nicky/Web/www;
+        root         /Users/nicky/Web/www;
 
         location / {
-            index  index.php index.html;
+            index   index.php index.html;
         }
-        include /Users/Nicky/Web/Conf/nginx/global/php.conf;
+        include /Users/nicky/Web/config/server/nginx/global/php.conf;
     }
 
-    include /Users/Nicky/Web/Conf/nginx/site-enable/*.conf;
+    include /Users/nicky/Web/config/server/nginx/site-enable/*.conf;
 }

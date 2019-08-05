@@ -12,8 +12,8 @@ AddType application/x-httpd-php .php .phtml .inc .php3
 
 ############################# symfony 1.4 ##############################
 #引用symfony1.4的内置资源文件，包括CSS,JS等
-Alias /sf /Users/Nicky/Web/lib/symfony14/data/web/sf
-<Directory /Users/Nicky/Web/lib/symfony14/data/web/sf>
+Alias /sf /Users/nicky/Web/config/lib/symfony14/data/web/sf
+<Directory /Users/nicky/Web/config/lib/symfony14/data/web/sf>
     AllowOverride All
     Require all granted
 </Directory>
@@ -21,8 +21,8 @@ Alias /sf /Users/Nicky/Web/lib/symfony14/data/web/sf
 ############################# Localhost Server ##########################
 ServerName 127.0.0.1
 #设置localhost访问权限到www目录
-DocumentRoot "/Users/Nicky/Web/www"
-<Directory /Users/Nicky/Web/www>
+DocumentRoot "/Users/nicky/Web/www"
+<Directory /Users/nicky/Web/www>
 	#Options Indexes MultiViews FollowSymLinks
     Options Indexes FollowSymLinks Includes ExecCGI
     AllowOverride All
@@ -37,5 +37,5 @@ DocumentRoot "/Users/Nicky/Web/www"
 
 
 ############################# Virtual Hosts ############################
-#Include /Users/Nicky/Web/Conf/apache/vhost/*-vhost.conf
+#Include /Users/nicky/Web/config/server/apache/vhost/*-vhost.conf
 ############################# Virtual Hosts ############################

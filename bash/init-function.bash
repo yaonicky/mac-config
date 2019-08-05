@@ -3,7 +3,7 @@ if [ "Linux" = "$(uname -s)" ]; then
 elif [ "Darwin" = "$(uname -s)" ]; then
 	SYS_TYPE=M
 fi
-SHARE_SHELL_PATH="$USER_HOME/Web/bash"
+SHARE_SHELL_PATH="$USER_HOME/Web/config/bash"
 ### echo $SYS_TYPE
 
 ### 加入tab自動填充腳本
@@ -13,7 +13,7 @@ source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
 source $SHARE_SHELL_PATH/autocomplete-lunchy.bash
 
 function mcd(){
-	cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/$1
+	cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/current
 }
 
 function init-sf1(){
