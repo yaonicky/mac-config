@@ -1,0 +1,64 @@
+brew uninstall php54
+..........
+brew install php54 --with-fpm --with-init --with-mssql
+
+...The php.ini file can be found in:
+    /usr/local/etc/php/5.4/php.ini
+
+ln -sfv /usr/local/opt/php54/*.plist ~/Library/LaunchAgents
+
+launchctl unload ~/Library/LaunchAgents/homebrew-php.josegonzalez.php54.plist
+launchctl load ~/Library/LaunchAgents/homebrew-php.josegonzalez.php54.plist
+
+ps -ef |grep php
+
+netstat -an|grep 9054
+
+cd /usr/local/Cellar/php53/5.3.27/
+
+cp homebrew-php.josegonzalez.php53.plist ~/Library/LaunchAgents/
+
+cd /usr/local/etc/php/5.3/
+vi php-fpm.conf
+launchctl load ~/Library/LaunchAgents/homebrew-php.josegonzalez.php53.plist
+ps -ef |grep php
+
+cd /usr/local/etc/php/5.3/
+vi php.ini
+....timezone memory_limit upload_max_filesize ....
+
+Wizs-iMac:5.3 nicky$ which php
+/usr/local/bin/php
+Wizs-iMac:5.3 nicky$ ls -al /usr/local/bin/php
+lrwxr-xr-x  1 nicky  admin  30 Dec  3 16:36 /usr/local/bin/php -> ../Cellar/php54/5.4.22/bin/php
+
+php53 -i|more
+
+ps -ef |grep mysql
+
+ln -s /usr/local/Cellar/php53/5.3.27/bin/php /usr/local/bin/php53
+
+#######################################################
+brew search fastcgi
+
+brew install homebrew/apache/mod_fastcgi
+
+cd /Users/nicky/Webserver/www/
+mkdir cgi-bin
+
+#####vohost#############################################
+LoadModule fastcgi_module /usr/local/Cellar/mod_fastcgi/2.4.6/libexec/mod_fastcgi.so
+
+# load php fast cgi
+FastCgiExternalServer /Users/nicky/Webserver/www/cgi-bin/php54-fcgi -idle-timeout 60 -host 127.0.0.1:9054 -pass-header Authorization
+AddHandler php54-fcgi .php
+Action php54-fcgi /php54-fcgi
+Alias /php54-fcgi /Users/nicky/Webserver/www/cgi-bin/php54-fcgi
+
+FastCgiExternalServer /Users/nicky/Webserver/www/cgi-bin/php53-fcgi -idle-timeout 60 -host 127.0.0.1:9053 -pass-header Authorization
+# AddHandler php53-fcgi .php
+Action php53-fcgi /php53-fcgi
+Alias /php53-fcgi /Users/nicky/Webserver/www/cgi-bin/php53-fcgi
+
+
+

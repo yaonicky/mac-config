@@ -10,3 +10,4 @@ server/nginx/nginx.conf
 
 ### Other ignore ###
 .idea/
+.DS_Store
