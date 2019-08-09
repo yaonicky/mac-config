@@ -18,12 +18,7 @@ do
 	read -p "请输入项目名称:" project
 done
 
-read -p "请输入子目录 [默认子目录: $DOMAIN_SELF]:" domain
-if [[ "$domain" == "" ]]; then
-	domain="$DOMAIN_SELF"
-fi
-
-full_domain="$project.$domain"
+full_domain="$project.$DOMAIN_SELF"
 vhost_file="$PATH_VHOST/site-enable/$full_domain-vhost.conf"
 ### 检查项目虚拟配置文件
 if [[ ! -f "$vhost_file" ]]; then
@@ -40,20 +35,16 @@ if [[ ! -d "$PATH_VHOST/site-enable" ]]; then
 	mkdir -p $PATH_VHOST/site-enable
 fi
 
-read -p "请输域名访问地址 [默认域名: $DOMAINS_ALIAS]:" domain_alias
+read -p "请输域名访问地址 [默认域名: `echo $DOMAINS_ALIAS | sed -e "s/%PROJECT%/$project/g"`]:" domain_alias
 if [ $domain_alias ]; then
-	domain_alias="$domain_alias"
+	domain_alias=$domain_alias
 else
-	if [[ ! -z $DOMAINS_ALIAS ]]; then
-		domain_alias=`echo $DOMAINS_ALIAS | sed -e "s/%PROJECT%/$project/g"`
-	else
-		domain_alias=$full_domain
-	fi
+	domain_alias=`echo $DOMAINS_ALIAS | sed -e "s/%PROJECT%/$project/g"`
 fi
 echo "访问域名地址 = $domain_alias"
 echo "========================================================="
 
-default_root="$PATH_DOMAIN_WWW/$full_domain/current"
+default_root="$PATH_DOMAIN_WWW/$full_domain/$project"
 index_file="index.php"
 until [ "$is_sf" == "n" -o "$is_sf" == "y" ]
 do
@@ -70,6 +61,7 @@ if [ "$is_sf" == "y" ]; then
 	elif [ "$sf_version" == "2" -o "$sf_version" == "3" ]; then
 		index_file="app_dev.php";
 	else
+		doc_root="public";
 		index_file="index.php";
 	fi
 else

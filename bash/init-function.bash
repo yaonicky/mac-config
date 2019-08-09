@@ -13,7 +13,7 @@ source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
 source $SHARE_SHELL_PATH/autocomplete-lunchy.bash
 
 function mcd(){
-	cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/current
+	cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/$1
 }
 
 function init-sf1(){
@@ -24,7 +24,7 @@ function init-sf1(){
 		cp config/symfonylib.default.php config/symfonylib.php
 		./symfony plugin:publish-assets
 		./symfony project:permission
-		ln -s $USER_HOME/Web/lib/symfony14/data/web/sf web/sf
+		ln -sf $USER_HOME/Web/config/lib/symfony14/data/web/sf web/sf
 	else
 		echo "Please run in symfony project root path.";
 	fi
