@@ -135,16 +135,17 @@ echo "    set \$fcgi_pass     127.0.0.1:9072;" >> $vhost_file
 echo "    set \$root_path     $vhost_dir;" >> $vhost_file
 echo "    set \$index_file    $index_file;" >> $vhost_file
 echo "" >> $vhost_file
-echo "    listen             443;" >> $vhost_file
+echo "    listen             443 ssl;" >> $vhost_file
 echo "    server_name        $full_domain $domain_alias;" >> $vhost_file
 echo "    root               \$root_path;" >> $vhost_file
 echo "" >> $vhost_file
 echo "    error_log          $PATH_LOGS/$full_domain.ssl_error_nginx.log;" >> $vhost_file
 echo "    access_log         $PATH_LOGS/$full_domain.ssl_access_nginx.log;" >> $vhost_file
 echo "" >> $vhost_file
-echo "    ssl on;" >> $vhost_file
 echo "    ssl_certificate $PATH_CERT/server.crt;" >> $vhost_file
 echo "    ssl_certificate_key $PATH_CERT/server.key;" >> $vhost_file
+echo "    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;" >> $vhost_file
+echo "    ssl_ciphers HIGH:!aNULL:!MD5;" >> $vhost_file
 echo "" >> $vhost_file
 echo "    include $PATH_VHOST/global/php.conf;" >> $vhost_file
 echo "    include $PATH_VHOST/global/common.conf;" >> $vhost_file

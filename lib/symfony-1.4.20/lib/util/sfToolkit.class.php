@@ -611,12 +611,13 @@ class sfToolkit
 
   public static function camelize($text)
   {
-      if (preg_match('#/(.?)#', $text, $matches)) {
-          $text = str_replace($matches[0], '::'.strtoupper($matches[1]), $text);
-      }
-      if (preg_match('/(^|_|-)+(.)/', $text, $matches)) {
-          $text = str_replace($matches[0], strtoupper($matches[2]), $text);
-      }
-      return $text;
+//    if (preg_match('#/(.?)#', $text, $matches)) {
+//      $text = str_replace($matches[0], '::'.strtoupper($matches[1]), $text);
+//    }
+//    if (preg_match('/(^|_|-)+(.)/', $text, $matches)) {
+//      $text = str_replace($matches[0], strtoupper($matches[2]), $text);
+//    }
+//    return $text;
+    return strtr(ucwords(strtr($text, array('/' => ':: ', '_' => ' ', '-' => ' '))), array(' ' => ''));
   }
 }
