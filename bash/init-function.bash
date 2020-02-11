@@ -7,16 +7,15 @@ SHARE_SHELL_PATH="$USER_HOME/Web/config/bash"
 ### echo $SYS_TYPE
 
 ### 加入tab自動填充腳本
-source $SHARE_SHELL_PATH/autocomplete-git.bash
-source $SHARE_SHELL_PATH/autocomplete-symfony1.bash
-source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
-source $SHARE_SHELL_PATH/autocomplete-lunchy.bash
+#source $SHARE_SHELL_PATH/autocomplete-git.bash
+#source $SHARE_SHELL_PATH/autocomplete-symfony1.bash
+#source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
+#source $SHARE_SHELL_PATH/autocomplete-lunchy.bash
 
-function mcd(){
-	cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/$1
-}
+function mcd() { cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/$1 }
+function mkcd() { mkdir -p "$@" && cd "$_"; }
 
-function init-sf1(){
+function init-sf1() {
 	if [[ -f "./symfony" ]]; then
 		mkdir cache log web/uploads
 		git submodule update --init
@@ -30,7 +29,7 @@ function init-sf1(){
 	fi
 }
 
-function init-sf2(){
+function init-sf2() {
 	if [[ -d "./vendor" ]]; then
 		mkdir app/cache app/logs web/uploads
 		if [ "M" = "$SYS_TYPE" ]; then
@@ -51,7 +50,7 @@ function init-sf2(){
 	fi
 }
 
-function init-sf3(){
+function init-sf3() {
 	if [[ -d "./vendor" ]]; then
 		mkdir var/cache var/logs var/sessions web/uploads
 		if [ "M" = "$SYS_TYPE" ]; then
@@ -72,7 +71,7 @@ function init-sf3(){
 	fi
 }
 
-function sf2chmod(){
+function web2chmod() {
   if [ "M" = "$SYS_TYPE" ]; then
     chmod +a "_www allow delete,write,append,file_inherit,directory_inherit" $@
     chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" $@
