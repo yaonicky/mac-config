@@ -3,10 +3,10 @@ if [ "Linux" = "$(uname -s)" ]; then
 elif [ "Darwin" = "$(uname -s)" ]; then
 	SYS_TYPE=M
 fi
-SHARE_SHELL_PATH="$USER_HOME/Web/config/bash"
 ### echo $SYS_TYPE
 
 ### 加入tab自動填充腳本
+#SHARE_SHELL_PATH="$USER_HOME/Web/config/bash"
 #source $SHARE_SHELL_PATH/autocomplete-git.bash
 #source $SHARE_SHELL_PATH/autocomplete-symfony1.bash
 #source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
