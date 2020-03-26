@@ -12,6 +12,8 @@ fi
 #source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
 #source $SHARE_SHELL_PATH/autocomplete-lunchy.bash
 
+alias ll='ls -al'
+alias gs='git status'
 alias php-v56='export PATH="/usr/local/opt/php@5.6/bin:$PATH"'
 alias php-v70='export PATH="/usr/local/opt/php@7.0/bin:$PATH"'
 
