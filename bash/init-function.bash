@@ -12,7 +12,7 @@ fi
 #source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
 #source $SHARE_SHELL_PATH/autocomplete-lunchy.bash
 
-function mcd() { cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/$1 }
+function mcd() { cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/$1; }
 function mkcd() { mkdir -p "$@" && cd "$_"; }
 
 function init-sf1() {
