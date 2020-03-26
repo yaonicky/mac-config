@@ -12,6 +12,9 @@ fi
 #source $SHARE_SHELL_PATH/autocomplete-symfony2.bash
 #source $SHARE_SHELL_PATH/autocomplete-lunchy.bash
 
+alias php-v56='export PATH="/usr/local/opt/php@5.6/bin:$PATH"'
+alias php-v70='export PATH="/usr/local/opt/php@7.0/bin:$PATH"'
+
 function mcd() { cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/$1; }
 function mkcd() { mkdir -p "$@" && cd "$_"; }
 
