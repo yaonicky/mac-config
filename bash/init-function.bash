@@ -45,7 +45,7 @@ function init-sf2() {
 			setfacl -R -m u:www:rwX -m u:`whoami`:rwX app/cache app/logs web/uploads
 			setfacl -dR -m u:www:rwx -m u:`whoami`:rwx app/cache app/logs web/uploads
 		fi
-		app/console assets:install --symlink
+		app/console assets:install --symlink --relative
 		app/console assetic:dump
 		
 		app/console cache:clear --env=dev --no-optional-warmers
@@ -63,8 +63,8 @@ function init-sf3() {
 			chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" var/cache var/logs var/sessions web/uploads
 			chmod 777 var/cache var/logs var/sessions web/uploads
 		else
-			setfacl -R -m u:www:rwX -m u:`whoami`:rwX var/cache var/logs web/uploads
-			setfacl -dR -m u:www:rwx -m u:`whoami`:rwx var/cache var/logs web/uploads
+			setfacl -R -m u:www:rwX -m u:`whoami`:rwX var/cache var/logs var/sessions web/uploads
+			setfacl -dR -m u:www:rwx -m u:`whoami`:rwx var/cache var/logs var/sessions web/uploads
 		fi
 		bin/console assets:install --symlink --relative
 		bin/console assetic:dump
