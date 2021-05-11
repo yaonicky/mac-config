@@ -107,7 +107,7 @@ fi
 #Vhost config
 echo "server {" > $vhost_file
 echo "    set \$project_name  $project;" >> $vhost_file
-echo "    set \$fcgi_pass     127.0.0.1:9072;" >> $vhost_file
+echo "    set \$fcgi_pass     127.0.0.1:9074;" >> $vhost_file
 echo "    set \$root_path     $vhost_dir;" >> $vhost_file
 echo "    set \$index_file    $index_file;" >> $vhost_file
 echo "" >> $vhost_file
@@ -131,7 +131,7 @@ if [ "$ssl" == "y" ]; then
 
 echo "server {" >> $vhost_file
 echo "    set \$project_name  $project;" >> $vhost_file
-echo "    set \$fcgi_pass     127.0.0.1:9072;" >> $vhost_file
+echo "    set \$fcgi_pass     127.0.0.1:9074;" >> $vhost_file
 echo "    set \$root_path     $vhost_dir;" >> $vhost_file
 echo "    set \$index_file    $index_file;" >> $vhost_file
 echo "" >> $vhost_file

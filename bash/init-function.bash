@@ -16,6 +16,7 @@ alias ll='ls -al'
 alias gs='git status'
 alias php-v56='export PATH="/usr/local/opt/php@5.6/bin:$PATH"'
 alias php-v70='export PATH="/usr/local/opt/php@7.0/bin:$PATH"'
+alias php-v72='export PATH="/usr/local/opt/php@7.2/bin:$PATH"'
 
 function mcd() { cd $USER_HOME/Web/www/$1.$DOMAIN_SELF/$1; }
 function mkcd() { mkdir -p "$@" && cd "$_"; }
@@ -68,6 +69,26 @@ function init-sf3() {
 		fi
 		bin/console assets:install --symlink --relative
 		bin/console assetic:dump
+		
+		bin/console cache:clear --env=dev --no-optional-warmers
+		bin/console cache:clear --env=prod --no-optional-warmers
+	else
+		echo "Please run in symfony project root path after composer update.";
+	fi
+}
+
+function init-sf5() {
+	if [[ -d "./vendor" ]]; then
+		mkdir var/cache var/log public/uploads
+		if [ "M" = "$SYS_TYPE" ]; then
+			chmod +a "_www allow delete,write,append,file_inherit,directory_inherit" var/cache var/log public/uploads
+			chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" var/cache var/log public/uploads
+			chmod 777 var/cache var/log public/uploads
+		else
+			setfacl -R -m u:www:rwX -m u:`whoami`:rwX var/cache var/log public/uploads
+			setfacl -dR -m u:www:rwx -m u:`whoami`:rwx var/cache var/log public/uploads
+		fi
+		bin/console assets:install --symlink --relative
 		
 		bin/console cache:clear --env=dev --no-optional-warmers
 		bin/console cache:clear --env=prod --no-optional-warmers

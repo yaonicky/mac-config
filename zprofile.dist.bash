@@ -1,3 +1,5 @@
+### 默認EXPORT版本 ###
+
 USER_HOME="/Users/nicky"
 DOMAIN_SELF="dev"
 source $USER_HOME/Web/config/bash/init-function.bash

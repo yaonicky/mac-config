@@ -43,7 +43,7 @@ http {
     gzip_disable "MSIE [1-6]\.";
 
     server {
-        set $fcgi_pass     127.0.0.1:9072;
+        set $fcgi_pass     127.0.0.1:9074;
 
         listen       80;
         server_name  localhost;
