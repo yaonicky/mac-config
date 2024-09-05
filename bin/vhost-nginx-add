@@ -107,7 +107,7 @@ fi
 #Vhost config
 echo "server {" > $vhost_file
 echo "    set \$project_name  $project;" >> $vhost_file
-echo "    set \$fcgi_pass     127.0.0.1:9074;" >> $vhost_file
+echo "    set \$fcgi_pass     127.0.0.1:9000;" >> $vhost_file
 echo "    set \$root_path     $vhost_dir;" >> $vhost_file
 echo "    set \$index_file    $index_file;" >> $vhost_file
 echo "" >> $vhost_file
@@ -118,11 +118,8 @@ echo "" >> $vhost_file
 echo "    error_log          $PATH_LOGS/$full_domain.error_nginx.log;" >> $vhost_file
 echo "    access_log         $PATH_LOGS/$full_domain.access_nginx.log;" >> $vhost_file
 echo "" >> $vhost_file
-echo "    include $PATH_VHOST/global/php.conf;" >> $vhost_file
 echo "    include $PATH_VHOST/global/common.conf;" >> $vhost_file
-if [ "$is_sf" == "y" ] && [ "$sf_version" == "1" ]; then
-echo "    include $PATH_VHOST/global/symfony.conf;" >> $vhost_file
-fi
+echo "    include $PATH_VHOST/global/php.docker.conf;" >> $vhost_file
 echo "}" >> $vhost_file
 echo "" >> $vhost_file
 
@@ -131,7 +128,7 @@ if [ "$ssl" == "y" ]; then
 
 echo "server {" >> $vhost_file
 echo "    set \$project_name  $project;" >> $vhost_file
-echo "    set \$fcgi_pass     127.0.0.1:9074;" >> $vhost_file
+echo "    set \$fcgi_pass     127.0.0.1:9000;" >> $vhost_file
 echo "    set \$root_path     $vhost_dir;" >> $vhost_file
 echo "    set \$index_file    $index_file;" >> $vhost_file
 echo "" >> $vhost_file
@@ -147,11 +144,8 @@ echo "    ssl_certificate_key $PATH_CERT/server.key;" >> $vhost_file
 echo "    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;" >> $vhost_file
 echo "    ssl_ciphers HIGH:!aNULL:!MD5;" >> $vhost_file
 echo "" >> $vhost_file
-echo "    include $PATH_VHOST/global/php.conf;" >> $vhost_file
 echo "    include $PATH_VHOST/global/common.conf;" >> $vhost_file
-if [ "$is_sf" == "y" ] && [ "$sf_version" == "1" ]; then
-echo "    include $PATH_VHOST/global/symfony.conf;" >> $vhost_file
-fi
+echo "    include $PATH_VHOST/global/php.docker.conf;" >> $vhost_file
 echo "}" >> $vhost_file
 echo "" >> $vhost_file
 

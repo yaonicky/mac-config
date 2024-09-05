@@ -21,8 +21,8 @@ http {
     #                  '$status $body_bytes_sent "$http_referer" '
     #                  '"$http_user_agent" "$http_x_forwarded_for"';
 
-    error_log   /usr/local/etc/nginx/logs/error.log;
-    access_log  /usr/local/etc/nginx/logs/access.log;
+    error_log   /opt/homebrew/etc/nginx/logs/error.log;
+    access_log  /opt/homebrew/etc/nginx/logs/access.log;
 
     sendfile        on;
     #tcp_nopush     on;
