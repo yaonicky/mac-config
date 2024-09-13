@@ -1,0 +1,26 @@
+server {
+    set $project_name  demo;
+    set $fcgi_pass     127.0.0.1:9074;
+    set $root_path     /code/demo/web;
+    set $index_file    app_dev.php;
+
+    listen             80;
+    server_name        demo.l.wizmacau.com;
+    root               $root_path;
+
+    location / {
+        try_files $uri /${index_file}${is_args}${args};
+    }
+
+    location ~ ^/app_dev\.php(/|$) {
+        fastcgi_pass                  $fcgi_pass;
+        fastcgi_split_path_info       ^(.+\.php)(/.*)$;
+
+        include                       fastcgi_params;
+        fastcgi_param PATH_INFO       $fastcgi_path_info;
+        fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT   $document_root;
+        fastcgi_param HTTPS           off;
+    }
+}
