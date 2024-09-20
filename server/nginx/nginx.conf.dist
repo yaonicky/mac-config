@@ -43,16 +43,13 @@ http {
     gzip_disable "MSIE [1-6]\.";
 
     server {
-        set $fcgi_pass     127.0.0.1:9074;
-
-        listen       80;
+        listen       8080;
         server_name  localhost;
-        root         /Users/nicky/Web/www;
 
         location / {
-            index   index.php index.html;
+            root   html;
+            index  index.html index.htm;
         }
-        include /Users/nicky/Web/config/server/nginx/global/php.conf;
     }
 
     include /Users/nicky/Web/config/server/nginx/site-enable/*.conf;
